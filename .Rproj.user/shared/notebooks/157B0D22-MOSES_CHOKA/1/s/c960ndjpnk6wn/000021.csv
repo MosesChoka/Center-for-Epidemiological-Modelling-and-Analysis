@@ -1,0 +1,8 @@
+"0","# Use a histogram plot the distribution of diarrhea cases"
+"0","library(ggplot2)"
+"0","library(scales)"
+"0",""
+"0","hist_plot <- ggplot(analysis_data,aes(x=analysis_data$Diarrhea_cases, y=..count../sum(..count..))) + geom_histogram(fill =""cornflowerblue"",color = ""white"") +"
+"0","  labs(title = ""Total number of Reported Diarrhea Cases"", subtitle =""(Jan 2021 - June 2023)"", x = ""Diarrhea Cases"", y = ""Percent"" ) + scale_y_continuous(labels=percent)"
+"0",""
+"0","hist_plot"

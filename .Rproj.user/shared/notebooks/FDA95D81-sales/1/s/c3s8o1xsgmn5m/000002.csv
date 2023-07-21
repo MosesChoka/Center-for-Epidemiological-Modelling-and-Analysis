@@ -1,0 +1,52 @@
+"0","```r
+# Look at the structure of the three datasets
+# Central data
+dim(centralData)
+```"
+"1","[1] 2323   24
+"
+"0","```r
+colnames(centralData)
+```"
+"1"," [1] \"Row.ID\"        \"Order.ID\"      \"Ship.Mode\"     \"Customer.ID\"   \"Customer.Name\"
+ [6] \"Segment\"       \"Country\"       \"City\"          \"State\"         \"Postal.Code\"  
+[11] \"Product.ID\"    \"Category\"      \"Sub.Category\"  \"Product\"       \"Sales\"        
+[16] \"Quantity\"      \"Profit\"        \"Order.Year\"    \"Order.Month\"   \"Order.Day\"    
+[21] \"Ship.Year\"     \"Ship.Month\"    \"Ship.Day\"      \"Discounts\"    
+"
+"0","```r
+# West Data
+dim(westData)
+```"
+"1","[1] 9553   41
+"
+"0","```r
+colnames(westData)
+```"
+"1"," [1] \"Row.ID\"              \"Order.ID\"            \"Order.Date\"          \"Ship.Date\"          
+ [5] \"Ship.Mode\"           \"Customer.ID\"         \"Customer.Name\"       \"Segment\"            
+ [9] \"Country\"             \"City\"                \"Postal.Code\"         \"Region\"             
+[13] \"Product.ID\"          \"Category\"            \"Sub.Category\"        \"Product.Name\"       
+[17] \"Sales\"               \"Quantity\"            \"Discount\"            \"Profit\"             
+[21] \"Right_Row.ID\"        \"Right_Order.Date\"    \"Right_Ship.Date\"     \"Right_Ship.Mode\"    
+[25] \"Right_Customer.ID\"   \"Right_Customer.Name\" \"Right_Segment\"       \"Right_Country\"      
+[29] \"Right_City\"          \"Right_State2\"        \"Right_Postal.Code\"   \"Right_Region\"       
+[33] \"Right_Product.ID\"    \"Right_Category\"      \"Right_Sub.Category\"  \"Right_Product.Name\" 
+[37] \"Right_Sales\"         \"Right_Quantity\"      \"Right_Discount\"      \"Right_Profit\"       
+[41] \"State\"              
+"
+"0","```r
+# East Data
+dim(eastData)
+```"
+"1","[1] 2846   21
+"
+"0","```r
+colnames(eastData)
+```"
+"1"," [1] \"Category\"      \"City\"          \"Country\"       \"Customer.ID\"   \"Customer.Name\"
+ [6] \"Discount\"      \"Order.Date\"    \"Order.ID\"      \"Postal.Code\"   \"Product.ID\"   
+[11] \"Product.Name\"  \"Profit\"        \"Quantity\"      \"Region\"        \"Row.ID\"       
+[16] \"Segment\"       \"Ship.Date\"     \"Ship.Mode\"     \"State\"         \"Sub.Category\" 
+[21] \"Sales\"        
+"

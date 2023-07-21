@@ -1,0 +1,8 @@
+"0","# Create a line plot using ggplot2"
+"0","line_plot <- ggplot(yearly_diarrhea_cases, aes(x = year, y = reported_diarrhea_cases)) +"
+"0","  geom_line(color=""red"") +"
+"0","  labs(x = ""Year"", y = ""Reported Diarrhea Cases"", title = ""Yearly Diarrhea Cases Trend"") +"
+"0","   scale_x_continuous(breaks = unique(yearly_diarrhea_cases$year), labels = unique(yearly_diarrhea_cases$year))"
+"0",""
+"0","# Display the line plot"
+"0","print(line_plot)"

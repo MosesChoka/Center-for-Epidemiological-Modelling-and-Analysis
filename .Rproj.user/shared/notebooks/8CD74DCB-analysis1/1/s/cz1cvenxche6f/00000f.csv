@@ -1,0 +1,6 @@
+"0","# Check for missing values in the columns"
+"0","any(is.na(cema_internship_task_2023))"
+"1","[1]"
+"1"," TRUE"
+"1","
+"

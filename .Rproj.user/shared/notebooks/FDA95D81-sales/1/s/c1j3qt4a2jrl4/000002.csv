@@ -1,0 +1,21 @@
+"0","```r
+library(tidyr)
+library(tidyverse)
+```"
+"1","Registered S3 methods overwritten by 'dbplyr':
+  method         from
+  print.tbl_lazy     
+  print.tbl_sql      
+── Attaching packages ──────────────────────────────────────────────────── tidyverse 1.3.2 ──✔ ggplot2 3.4.0     ✔ dplyr   1.0.9
+✔ tibble  3.1.7     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1
+✔ purrr   0.3.4     ── Conflicts ─────────────────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+"
+"0","```r
+#load from CSV
+centralData <- read.csv(\"Orders_Central.csv\", header=TRUE)
+westData <- read.csv(\"orders_west.csv\", header=TRUE)
+eastData <- read.delim(\"Orders_East.txt\", header=TRUE, sep='\t')
+```"

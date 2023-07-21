@@ -1,0 +1,7 @@
+"0","# deleting missing values"
+"0","cleaned_data <- na.omit(cema_internship_task_2023)"
+"0","any(is.na(cleaned_data))"
+"1","[1]"
+"1"," FALSE"
+"1","
+"

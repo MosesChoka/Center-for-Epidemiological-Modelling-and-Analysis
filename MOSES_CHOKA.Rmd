@@ -1,0 +1,296 @@
+---
+title: "Data Analysis on Children's Health"
+author: "Moses Choka Onyango"
+Institution: "Taita Taveta University"
+date: "2023-07-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### INTRODUCTION
+Epidemiology as a field of study, is focused on studying about the distribution and determinants of diseases in a population of a particular region. The field also aims at the development of knowledge on how to control the diseases based on insights obtained from analysis of data.
+
+Often, the population demographics are of different structure in different regions, in this study the population of interest are children aged five years and below in the 47 counties in the Country.
+
+### DATA
+The data for this particular study comes from all the 47 counties in Kenya for periods between January 2021 and June 2023. The recorded variables includes the number of children dewormed, number of children with acute malnutrition, number of children with stunted growth, number of children with  diarrhea cases, and the number of children who are underweight.The children involved in this particular study are aged five years and below.
+
+### OBJECTIVES OF THE STUDY
+
+#### Specific Objective
+* This study aims to find the correlation between the number of diarrhea cases with the total number of children dewormed, number of children with acute malnutrition and number of children with stunted growth.
+
+* In addition, the study aims at developing a linear regression model to study the relationship between these variables, with the total number of diarrhea cases as the response variable, and the total number of children dewormed, number of children with acute malnutrition as the independent variables.
+
+#### General objectives
+* To determine the counties with the highest and lowest number of diarrhea cases between Jan 2021 and June 2023
+
+* To find out the number of children whom have been dewormed in different counties in 2023, counties of interest will be the counties with the highest number of diarrhea cases.
+
+* To determine the counties with the highest malnutrition cases
+
+* To determine the counties with the lowest malnutrtion cases
+
+### METHODOLOGY
+In this analysis we'll perform exploratory data analysis (EDA) on the data to gain general insights about the data, and later carry out correlation analysis and regression analysis to study the association between the dependent and independent variables.
+
+The analysis will follow the conventional data analysis steps, including:
+
+* Data Preparation
+* Data Processing
+* Data Analysis
+* Data Visualization
+
+
+
+```{r}
+# load data
+library(readr)
+cema_internship_task_2023 <- read_csv("cema_internship_task_2023.csv")
+head(cema_internship_task_2023,5) # prints the first 5 entries in the dataset
+```
+
+```{r pressure, echo=FALSE}
+# Print the name of the columns to see the name of the recorded variables
+colnames(cema_internship_task_2023)
+```
+
+```{r}
+# Obtain the structure of the data ; this will highlight the dimension of the dataset (number of rows and columns) and the data types of each variable
+str(cema_internship_task_2023)
+```
+
+Looking at the results from the str() function above, we realize that the data set has 1410 rows and 11 columns with the variables having different data types.
+
+Next step we will check if the data has any missing values then obtain its summary which will basically give us different measures and distributions.
+```{r}
+# Check for missing values in the columns
+any(is.na(cema_internship_task_2023))
+```
+
+Using the above function we find out that there are some missing values in the dataset, we can break this down to findout the sum of missing values in each column
+```{r}
+#Sum of missing values in each column
+colSums(is.na(cema_internship_task_2023))
+```
+Next we need to find a way of dealing with these missing values, we will delete them for this case.
+```{r}
+# deleting missing values
+cleaned_data <- na.omit(cema_internship_task_2023)
+any(is.na(cleaned_data))
+```
+Our new data set now is free from all the NA values, its time to transform the data to make it consistent, organized and easy to use.
+
+Earlier on we noticed that the period variable was recorded as a character data type, we will need to change it to date data type
+
+```{r}
+# Convert period variable from character to date data type
+suppressMessages(library(dplyr))
+suppressMessages(library(lubridate))
+
+custom_format = "%b-%y"
+
+cleaned_data <- cleaned_data %>%
+  mutate(date_period = parse_date_time(period, orders = custom_format) %>% as.Date()) %>%
+  select(-period)
+
+class(cleaned_data$date_period) #check the data type of the new variable
+
+head(cleaned_data, 10)
+
+```
+
+Next we'll change the variable names to a format that is easy to work with.
+
+```{r}
+# rename columns to make them easy to work with
+# we'll name our new data set as analysis_data
+
+suppressMessages(library(dplyr))
+
+analysis_data <- cleaned_data %>% rename(Total_Dewormed = `Total Dewormed`, Acute_Malnutrition = `Acute Malnutrition`, stunted_0_to_6_mths= `stunted 0-<6 months`, stunted_6_to_23_mths = `stunted 6-23 months`, stunted_24_to_59_mths = `stunted 24-59 months`, Diarrhea_cases = `diarrhoea cases`, underweight_0_to_6_mths = `Underweight 0-<6 months`, underweight_6_to_23_mths = `Underweight 6-23 months`, underweight_24_to_59_mths = `Underweight 24-59 Months`)
+
+colnames(analysis_data) # print the new column names
+dim(analysis_data)
+```
+We now have a consistent data that we can work with. Our new data after cleaning has 1048 rows and 11 columns.
+
+### Summary Statistics
+Summary statistics provides us with the descriptive statistics of the data with the different measures including the measures of central tendencies, measures of distribution, and measures of dispersion.
+
+These are important statistics as they give us general insights about the patterns in the data. For instance, we can deduce from the summary results below that the average diarrhea cases between Jan 2021 to June 2023 is 3071.
+
+```{r}
+# Summary about the new data set
+summary(analysis_data)
+
+```
+
+### Diarrhea Cases
+
+```{r}
+# Use a histogram plot the distribution of diarrhea cases
+library(ggplot2)
+library(scales)
+
+hist_plot <- ggplot(analysis_data,aes(x=analysis_data$Diarrhea_cases, y=..count../sum(..count..))) + geom_histogram(fill ="cornflowerblue",color = "white") +
+  labs(title = "Total number of Reported Diarrhea Cases", subtitle ="(Jan 2021 - June 2023)", x = "Diarrhea Cases", y = "Percent" ) + scale_y_continuous(labels=percent)
+
+hist_plot
+```
+
+Determine the highest number of diarrhea cases (Top 10 counties)
+```{r}
+Total_Diarrhea_Cases <- analysis_data %>%
+  group_by(county) %>%
+  select(county, Diarrhea_cases) %>%
+  mutate(total_cases=sum(Diarrhea_cases)) %>%
+  select(-Diarrhea_cases) %>%
+  arrange(desc(total_cases)) %>%
+  top_n(10) %>%
+  distinct(total_cases, .keep_all = FALSE)
+
+
+print(Total_Diarrhea_Cases)
+
+```
+
+From the result above it can be seen that Nairobi County has had the highest cases of diarrhea for kids aged <5 years (304,178), followed by Turkana County (220760). Nyandarua County has the least number of Diarrhea cases with 3909 cases reported between 2016 January to June 2023. We can create a plot to show the result of the top 10 counties with highest recorded cases of diarrhea.
+
+
+```{r echo=FALSE}
+top_10_diarrhea_cases_counties = head(Total_Diarrhea_Cases, 10)
+
+my_plot <- ggplot(top_10_diarrhea_cases_counties, aes(x =reorder(county,total_cases), y =total_cases)) + geom_bar(stat = 'identity', fill="indianred2", color ="white")+
+  coord_flip() + labs(x="", y="total_cases", title = "Top 10 Counties with Diarrhea Cases in Children Under 5 Years", subtitle = "(Between Jan 2021 and June 2023)")
+
+my_plot + scale_y_continuous(labels = scales::comma)
+
+
+```
+
+Next, we'd like to check the pattern of Diarrhea across different time period, we are interested in finding out if there have been an increase or decrease in number of diarrhea cases reported between 2021 and 2023. 
+
+
+```{r}
+# Obtain the total reported diarrhea cases - yearly
+yearly_diarrhea_cases <- analysis_data %>%
+  select(date_period, Diarrhea_cases) %>%
+  mutate(year = year(date_period)) %>%
+  group_by(year) %>%
+  summarise(reported_diarrhea_cases = sum (Diarrhea_cases))
+  
+
+yearly_diarrhea_cases
+```
+
+The highest number of diarrhea cases were reported in 2022 (1275357). In 2021 the number of reported diarrhea cases was 1119555. In 2023 the reported cases thus far is 823638.
+
+We can plot the result on a line graph to show the trend. We will need to convert the year to date data type first.
+
+```{r echo=FALSE}
+# Create a line plot using ggplot2
+line_plot <- ggplot(yearly_diarrhea_cases, aes(x = year, y = reported_diarrhea_cases)) +
+  geom_line(color="red") +
+  labs(x = "Year", y = "Reported Diarrhea Cases", title = "Yearly Diarrhea Cases Trend") +
+   scale_x_continuous(breaks = unique(yearly_diarrhea_cases$year), labels = unique(yearly_diarrhea_cases$year))
+
+# Display the line plot
+print(line_plot)
+```
+
+
+### Dewormed Case
+
+```{r}
+Total_Dewormed_Per_County <- analysis_data %>%
+  group_by(county) %>%
+  select(county, Total_Dewormed) %>%
+  mutate(dewormed=sum(Total_Dewormed)) %>%
+  select(-Total_Dewormed) %>%
+  arrange(desc(dewormed)) %>%
+  top_n(10) %>%
+  distinct(dewormed, .keep_all = FALSE)
+
+
+print(Total_Dewormed_Per_County)
+
+```
+Nairobi County has dewormed 2019461 children between 2021-Jan to 2023-June. We can however, break down our analysis to obtain insights on the number of children that have been dewormed in 2023 thus far.
+
+```{r}
+# Number of children whom have been dewormed per county in 2023
+Total_Dewormed_Per_County_2023 <- analysis_data %>%
+  filter(date_period >='2023-01-01') %>%
+  group_by(county) %>%
+  select(county, Total_Dewormed) %>%
+  mutate(dewormed_2023=sum(Total_Dewormed)) %>%
+  select(-Total_Dewormed) %>%
+  arrange(desc(dewormed_2023)) %>%
+  top_n(10) %>%
+  distinct(dewormed_2023, .keep_all = TRUE)
+
+top_10_dewormed_counties_2023 = head(Total_Dewormed_Per_County_2023, 10)
+
+print(top_10_dewormed_counties_2023)
+
+```
+```{r}
+# print the counties with the lowest number of children dewormed
+county_least_dewormed <- tail(Total_Dewormed_Per_County_2023, 3)
+print(county_least_dewormed)
+```
+
+In 2023, Nairobi County has dewormed many children (511496), followed by Meru County (202761). And Uasin Gishu, Nyandarua, and Bomet County has the least number of children dewormed (7878, 7378, and 2011 respectively)
+
+
+## Correlation Analysis
+In this section we aim at finding out the association between the numeric variables in the dataset.
+
+Correlation values lies between -1 and 1. A negative correlation value indicates an inverse association, that is, an increase in one factor likely leads to a decrease in the other, a 0 correlation value indicates no relationship between the variables, and a positive correlation value indicates that an increase in one factor will likely lead to an increase in the other.
+
+```{r}
+# we'll calculate the correlations and use ggcorrplot() function to plot the association
+library(ggcorrplot)
+
+# select numeric columns only
+corr_data <-  dplyr::select_if(analysis_data, is.numeric)
+
+# calculate the correlation
+corr_matrix <-cor(corr_data)
+
+corr_matrix
+```
+
+```{r}
+# Plot the corr_matrix
+cor_plot <- ggcorrplot(corr_matrix,
+  hc.order = TRUE,
+  type = "lower",
+  lab = TRUE) + labs(title = "Correlation on Children health data", subtitle = "  ")
+
+cor_plot
+```
+
+Using the correlation values we can obtain the association between two variables. Taking for instance the correlation value between diarrhea cases and acute malnutrition (0.25) indicates that there is a positive correlation between the two.
+
+However, correlation does not necessarily mean causation. We therefore carried out a regression analysis to study if total number of children dewormed, number of children with acute malnutrition had a significant impact on the number of diarrhea cases reported.
+
+### Regression analysis
+Using multiple linear regression, we can find out the relationship between one dependent variable and two or more independent variables.
+
+In this analysis, the dependent variable is the number of diarrhea cases, and the independent variables include total number of children dewormed, number of children with acute malnutrition.
+
+```{r}
+# use lm() function to carry out regression analysis
+model <- lm(Diarrhea_cases~Acute_Malnutrition+Total_Dewormed, analysis_data)
+
+summary(model)
+```
+From the regression model result, acute malnutrition seems to have a significant impact on the number of diarrhea cases reported (p-value = 2.67-14). An increase in malnutrition cases increases the number of reported diarrhea cases by 1.985e+00.
+
+In addition, it is discovered that the number of children dewormed in a given region significantly impacted the total number of diarrhea cases the region reported (p-value = <2e-16). 
+

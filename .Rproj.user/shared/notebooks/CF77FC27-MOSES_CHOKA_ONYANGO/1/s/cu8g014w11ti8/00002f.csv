@@ -1,0 +1,8 @@
+"0","yearly_diarrhea_cases <- analysis_data %>%"
+"0","  select(date_period, Diarrhea_cases) %>%"
+"0","  mutate(year = year(date_period)) %>%"
+"0","  group_by(year) %>%"
+"0","  summarise(reported_diarrhea_cases = sum (Diarrhea_cases))"
+"0","  "
+"0",""
+"0","yearly_diarrhea_cases"

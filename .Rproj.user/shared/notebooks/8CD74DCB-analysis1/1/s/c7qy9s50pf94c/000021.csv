@@ -1,0 +1,7 @@
+"0","# Plot the corr_matrix"
+"0","cor_plot <- ggcorrplot(corr_matrix,"
+"0","  hc.order = TRUE,"
+"0","  type = ""lower"","
+"0","  lab = TRUE) + labs(title = ""Correlation on Children health data"", subtitle = ""  "")"
+"0",""
+"0","cor_plot"

@@ -1,0 +1,25 @@
+{
+    "id": "441002AF",
+    "path": "D:/Sales/sales.Rmd",
+    "project_path": null,
+    "type": "r_markdown",
+    "hash": "2067617935",
+    "contents": "",
+    "dirty": false,
+    "created": 1689930756100.0,
+    "source_on_save": false,
+    "relative_order": 4,
+    "properties": {
+        "chunk_output_type": "inline",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683355107,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683355107,
+    "read_only": false,
+    "read_only_alternatives": []
+}

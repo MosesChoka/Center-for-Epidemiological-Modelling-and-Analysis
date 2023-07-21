@@ -1,0 +1,6 @@
+"0","top_10_diarrhea_cases_counties = head(Top_10_Diarrhea_Cases, 10)"
+"0",""
+"0","my_plot <- ggplot(top_10_diarrhea_cases_counties, aes(x =reorder(county,total_cases), y =total_cases)) + geom_bar(stat = 'identity', fill=""indianred2"", color =""white"")+"
+"0","  coord_flip() + labs(x="""", y=""total_cases"", title = ""Top 10 Counties with Diarrhea cases for children <5 Years"", subtitle = ""(Between Jan 2021 and June 2023)"")"
+"0",""
+"0","my_plot + scale_y_continuous(labels = scales::comma)"

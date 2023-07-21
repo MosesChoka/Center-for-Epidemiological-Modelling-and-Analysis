@@ -1,0 +1,2 @@
+"0","county_least_dewormed <- tail(Total_Dewormed_Per_County_2023, 3)"
+"0","print(county_least_dewormed)"
